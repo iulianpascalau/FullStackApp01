@@ -195,7 +195,7 @@ func TestStore_Lifecycle(t *testing.T) {
 
 	val, err = instance.GetCounter()
 	assert.Nil(t, err)
-	assert.Equal(t, uint64(1), newVal)
+	assert.Equal(t, uint64(1), val)
 
 	// Test ResetCounter
 	err = instance.ResetCounter()
