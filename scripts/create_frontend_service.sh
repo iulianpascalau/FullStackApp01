@@ -3,7 +3,7 @@
 # Configuration - MUST MATCH YOUR VM SETUP
 USER_NAME="ubuntu"
 APP_NAME="app-frontend"
-APP_DIR="/home/${USER_NAME}/frontend"
+APP_DIR="/home/${USER_NAME}/app/frontend"
 
 # We need the absolute path to npm. 
 # On the VM, run `which npm` to find it. 
