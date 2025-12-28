@@ -44,8 +44,9 @@ VERSION:
 )
 
 var (
-	log    = logger.GetOrCreate("main")
-	cliApp *cli.App
+	log     = logger.GetOrCreate("main")
+	cliApp  *cli.App
+	logfile common.LoggerFile
 
 	// logLevel defines the logger level
 	logLevel = cli.StringFlag{
@@ -64,6 +65,12 @@ func main() {
 	cliApp.Action = func(c *cli.Context) error {
 		return startApp(c)
 	}
+
+	defer func() {
+		if logfile != nil {
+			_ = logfile.Close()
+		}
+	}()
 
 	err := cliApp.Run(os.Args)
 	if err != nil {
@@ -90,13 +97,11 @@ func initCliFlags() {
 }
 
 func startApp(c *cli.Context) error {
-	logfile, err := prepareLogger(c.GlobalString(logLevel.Name))
+	var err error
+	logfile, err = prepareLogger(c.GlobalString(logLevel.Name))
 	if err != nil {
 		return err
 	}
-	defer func() {
-		_ = logfile.Close()
-	}()
 
 	log.Info("Starting app", "version", c.App.Version)
 
