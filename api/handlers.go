@@ -2,14 +2,24 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
 
 	"FullStackApp01/common"
+	logger "github.com/multiversx/mx-chain-logger-go"
 
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
+)
+
+const (
+	maxPassLength = 72
+)
+
+var (
+	log = logger.GetOrCreate("api")
 )
 
 // Storage defines the interface for persistence operations
@@ -117,8 +127,8 @@ func (s *Server) HandleRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if len(creds.Password) > 72 {
-		http.Error(w, "Password too long (max 72 characters)", http.StatusBadRequest)
+	if len(creds.Password) > maxPassLength {
+		http.Error(w, fmt.Sprintf("Password too long (max %d characters)", maxPassLength), http.StatusBadRequest)
 		return
 	}
 
@@ -132,6 +142,7 @@ func (s *Server) HandleRegister(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Could not create user", http.StatusInternalServerError)
 		return
 	}
+	log.Debug("User created successfully", "user", creds.Username)
 	w.WriteHeader(http.StatusCreated)
 }
 
@@ -186,6 +197,8 @@ func (s *Server) HandleLogin(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal error", http.StatusInternalServerError)
 		return
 	}
+
+	log.Debug("User logged in successfully", "user", creds.Username)
 }
 
 func (s *Server) HandleChangePassword(w http.ResponseWriter, r *http.Request) {
@@ -206,14 +219,15 @@ func (s *Server) HandleChangePassword(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var req ChangePasswordRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+	err = json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
 
-	if len(req.NewPassword) > 72 || len(req.OldPassword) > 72 {
+	if len(req.NewPassword) > maxPassLength || len(req.OldPassword) > maxPassLength {
 		w.WriteHeader(http.StatusBadRequest)
-		_ = json.NewEncoder(w).Encode(map[string]string{"error": "Password too long (max 72 characters)"})
+		_ = json.NewEncoder(w).Encode(map[string]string{"error": fmt.Sprintf("Password too long (max %d characters)", maxPassLength)})
 		return
 	}
 
@@ -223,15 +237,19 @@ func (s *Server) HandleChangePassword(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "User not found", http.StatusNotFound)
 		return
 	}
-	if err := bcrypt.CompareHashAndPassword(user.Hash, []byte(req.OldPassword)); err != nil {
+	err = bcrypt.CompareHashAndPassword(user.Hash, []byte(req.OldPassword))
+	if err != nil {
 		http.Error(w, "Invalid old password", http.StatusUnauthorized)
 		return
 	}
 
-	if err := s.store.UpdatePassword(username, req.NewPassword); err != nil {
+	err = s.store.UpdatePassword(username, req.NewPassword)
+	if err != nil {
 		http.Error(w, "Could not update password", http.StatusInternalServerError)
 		return
 	}
+
+	log.Debug("User changed password", "user", username)
 
 	w.WriteHeader(http.StatusOK)
 }
@@ -256,6 +274,9 @@ func (s *Server) HandleCounter(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Failed to encode counter", http.StatusInternalServerError)
 			return
 		}
+
+		log.Debug("counter query", "value", val)
+
 		return
 	}
 
@@ -273,6 +294,8 @@ func (s *Server) HandleCounter(w http.ResponseWriter, r *http.Request) {
 				http.Error(w, "Failed to encode counter", http.StatusInternalServerError)
 				return
 			}
+
+			log.Debug("counter incremented", "new value", val)
 		})
 		return
 	}
@@ -291,6 +314,8 @@ func (s *Server) HandleCounter(w http.ResponseWriter, r *http.Request) {
 				http.Error(w, "Failed to encode counter", http.StatusInternalServerError)
 				return
 			}
+
+			log.Debug("counter reset", "new value", 0)
 		})
 		return
 	}

@@ -15,7 +15,7 @@ After=network-online.target
 [Service]
 User=${USER_NAME}
 WorkingDirectory=${APP_DIR}
-ExecStart=${EXEC_PATH}
+ExecStart=${EXEC_PATH} -log-level *:INFO
 Restart=always
 EnvironmentFile=${ENV_FILE}
 
