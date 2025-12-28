@@ -3,7 +3,7 @@
 # Configuration
 USER_NAME="ubuntu"
 GROUP_NAME="ubuntu"
-APP_NAME="fullstackapp"
+APP_NAME="app"
 APP_DIR="/home/${USER_NAME}/${APP_NAME}"
 EXEC_PATH="${APP_DIR}/server"
 ENV_FILE="${APP_DIR}/.env"
@@ -11,11 +11,10 @@ ENV_FILE="${APP_DIR}/.env"
 # Create the service file content
 SERVICE_CONTENT="[Unit]
 Description=FullStackApp Go Backend
-After=network.target
+After=network-online.target
 
 [Service]
 User=${USER_NAME}
-Group=${GROUP_NAME}
 WorkingDirectory=${APP_DIR}
 ExecStart=${EXEC_PATH}
 Restart=always
