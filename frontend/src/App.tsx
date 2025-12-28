@@ -231,7 +231,17 @@ function App() {
         </div>
 
         <footer>
-          <p>Powered by Go, LevelDB & React 19</p>
+          <p>
+            Powered by Go, LevelDB & React 19 |{' '}
+            <a
+              href="https://github.com/iulianpascalau/FullStackApp01"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: '#646cff', textDecoration: 'none' }}
+            >
+              View on GitHub
+            </a>
+          </p>
         </footer>
       </div>
     </div>
