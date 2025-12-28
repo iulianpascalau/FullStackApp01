@@ -48,7 +48,7 @@ function App() {
     e.preventDefault()
     setPasswordMessage('')
     try {
-      const response = await fetch('http://localhost:8080/change-password', {
+      const response = await fetch('/change-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ function App() {
 
   const fetchCounter = async () => {
     try {
-      const response = await fetch('http://localhost:8080/counter', {
+      const response = await fetch('/counter', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -103,7 +103,7 @@ function App() {
       // Optimistic update
       setCount((prev) => (prev !== null ? prev + 1 : 1))
 
-      const response = await fetch('http://localhost:8080/counter', {
+      const response = await fetch('/counter', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -124,7 +124,7 @@ function App() {
   const handleReset = async () => {
     try {
       setCount(0)
-      const response = await fetch('http://localhost:8080/counter', {
+      const response = await fetch('/counter', {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
