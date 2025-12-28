@@ -17,7 +17,7 @@ export default function Login({ onLogin }: OrderProps) {
         const endpoint = isRegistering ? '/register' : '/login'
 
         try {
-            const response = await fetch(`http://localhost:8080${endpoint}`, {
+            const response = await fetch(`${endpoint}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password }),

@@ -11,8 +11,8 @@ On the target VM the following steps should be completed:
 # Update system
 sudo apt update && sudo apt upgrade -y
 
-# Install Nginx and Git
-sudo apt install -y nginx git
+# Install Git
+sudo apt install -y git
 
 # Install Go (Adjust version if needed, your go.mod says 1.24 so you need a very recent version)
 GO_LATEST_TESTED="1.24.11"
@@ -62,9 +62,11 @@ cp .env.example .env
 nano .env
 ```
 
-### 4. Setup Systemd Service (Backend)
+### 4. Setup Systemd Service (Backend and Frontend)
 ```bash
 cd ~/app/scripts
-./create_service.sh
+./create_backend_service.sh
+./create_frontend_service.sh
 ```
+
 
