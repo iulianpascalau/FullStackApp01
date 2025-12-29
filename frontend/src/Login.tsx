@@ -53,6 +53,8 @@ export default function Login({ onLogin }: OrderProps) {
                             value={username}
                             onChange={e => setUsername(e.target.value)}
                             required
+                            autoCapitalize="none"
+                            autoCorrect="off"
                         />
                     </div>
                     <div className="form-group">
