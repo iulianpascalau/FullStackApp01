@@ -24,8 +24,9 @@ profile.cov
 go.work
 go.work.sum
 
-# env file
+# files containing secrets / sensistive information
 .env
+Jenkinsfile
 
 # Editor/IDE
 .idea/
