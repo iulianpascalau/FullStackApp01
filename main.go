@@ -57,6 +57,8 @@ var (
 			" log level.",
 		Value: "*:" + logger.LogInfo.String(),
 	}
+
+	appVersion = "undefined"
 )
 
 func main() {
@@ -83,7 +85,7 @@ func initCliFlags() {
 	cliApp = cli.NewApp()
 	cli.AppHelpTemplate = helpTemplate
 	cliApp.Name = "App backend"
-	cliApp.Version = fmt.Sprintf("%s/%s/%s-%s", "1.0.1", runtime.Version(), runtime.GOOS, runtime.GOARCH)
+	cliApp.Version = fmt.Sprintf("%s/%s/%s-%s", appVersion, runtime.Version(), runtime.GOOS, runtime.GOARCH)
 	cliApp.Usage = "App backend"
 	cliApp.Authors = []cli.Author{
 		{
