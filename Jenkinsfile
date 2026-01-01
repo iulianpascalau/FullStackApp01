@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         PROD_VM_USER = 'ubuntu'
-        PROD_VM_HOST = 'jls-software.net'
+        PROD_VM_HOST = credentials('app-prod-vm-ip')
         PROJECT_PATH = '/home/ubuntu/app'
     }
 
