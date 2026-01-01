@@ -14,6 +14,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+const testVersion = "v1.2.3"
+
 var testKey = []byte("test_secret")
 
 func setupServer(t *testing.T) *Server {
@@ -24,7 +26,7 @@ func setupServer(t *testing.T) *Server {
 	err := store.SaveUser("admin", "admin123", "admin")
 	require.NoError(t, err)
 
-	return NewServer(store, testKey)
+	return NewServer(store, testVersion, testKey)
 }
 
 func TestHandleRegister(t *testing.T) {
@@ -167,4 +169,19 @@ func TestHandleCounter(t *testing.T) {
 
 		assert.Equal(t, http.StatusForbidden, rr.Code)
 	})
+}
+
+func TestHandleVersion(t *testing.T) {
+	s := setupServer(t)
+
+	req := httptest.NewRequest("GET", "/version", nil)
+	rr := httptest.NewRecorder()
+
+	s.HandleVersion(rr, req)
+
+	assert.Equal(t, http.StatusOK, rr.Code)
+	var resp VersionResponse
+	err := json.NewDecoder(rr.Body).Decode(&resp)
+	assert.NoError(t, err)
+	assert.Equal(t, "v1.2.3", resp.Version)
 }

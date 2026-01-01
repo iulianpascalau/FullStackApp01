@@ -17,7 +17,7 @@ import (
 
 func TestHandleChangePassword_LongPassword_Reproduction(t *testing.T) {
 	s := mock.NewMockStorage()
-	server := NewServer(s, []byte("secret"))
+	server := NewServer(s, testVersion, []byte("secret"))
 
 	username := "longpassuser"
 	// Register user with normal password first because SaveUser also uses bcrypt and would fail with long password

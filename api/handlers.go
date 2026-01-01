@@ -35,21 +35,28 @@ type Storage interface {
 
 // Server holds dependencies for API handlers
 type Server struct {
-	store  Storage
-	jwtKey []byte
+	store   Storage
+	jwtKey  []byte
+	version string
 }
 
 // NewServer creates a new API server
-func NewServer(store Storage, jwtKey []byte) *Server {
+func NewServer(store Storage, version string, jwtKey []byte) *Server {
 	return &Server{
-		store:  store,
-		jwtKey: jwtKey,
+		store:   store,
+		jwtKey:  jwtKey,
+		version: version,
 	}
 }
 
 // CounterResponse is the DTO for counter responses
 type CounterResponse struct {
 	Value uint64 `json:"value"`
+}
+
+// VersionResponse is the DTO for version responses
+type VersionResponse struct {
+	Version string `json:"version"`
 }
 
 type ChangePasswordRequest struct {
@@ -321,4 +328,13 @@ func (s *Server) HandleCounter(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+}
+
+func (s *Server) HandleVersion(w http.ResponseWriter, _ *http.Request) {
+	s.EnableCORS(w)
+	err := json.NewEncoder(w).Encode(VersionResponse{Version: s.version})
+	if err != nil {
+		http.Error(w, "Failed to encode version", http.StatusInternalServerError)
+		return
+	}
 }

@@ -146,7 +146,7 @@ func startApp(c *cli.Context) error {
 	// Ensure an admin exists
 	_ = store.SaveUser("admin", adminPassword, "admin")
 
-	server := api.NewServer(store, []byte(jwtKey))
+	server := api.NewServer(store, appVersion, []byte(jwtKey))
 
 	// Create a new ServeMux to avoid global state issues if we expand later
 	mux := http.NewServeMux()
@@ -154,6 +154,7 @@ func startApp(c *cli.Context) error {
 	mux.HandleFunc("/login", server.HandleLogin)
 	mux.HandleFunc("/change-password", server.HandleChangePassword)
 	mux.HandleFunc("/counter", server.HandleCounter)
+	mux.HandleFunc("/version", server.HandleVersion)
 
 	srv := &http.Server{
 		Addr:    backendInterface,

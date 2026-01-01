@@ -16,7 +16,7 @@ import (
 
 func TestCORSHeaders_OnError(t *testing.T) {
 	s := mock.NewMockStorage()
-	server := NewServer(s, []byte("secret"))
+	server := NewServer(s, testVersion, []byte("secret"))
 
 	// Create a user
 	username := "corsuser"
