@@ -60,6 +60,11 @@ function App() {
         })
       })
 
+      if (response.status === 401) {
+        handleLogout()
+        return
+      }
+
       if (response.ok) {
         setPasswordMessage('Password changed successfully!')
         setOldPassword('')
@@ -109,6 +114,10 @@ function App() {
           'Authorization': `Bearer ${token}`
         }
       })
+      if (response.status === 401) {
+        handleLogout()
+        return
+      }
       if (!response.ok) {
         throw new Error('Failed to increment')
       }
@@ -130,6 +139,10 @@ function App() {
           'Authorization': `Bearer ${token}`
         }
       })
+      if (response.status === 401) {
+        handleLogout()
+        return
+      }
       if (!response.ok) {
         throw new Error('Failed to reset')
       }
