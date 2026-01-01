@@ -34,3 +34,8 @@ go.work.sum
 
 # Logs directory
 logs/
+
+# Build artifacts and local data
+bin/
+data/
+server
