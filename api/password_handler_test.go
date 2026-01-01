@@ -24,7 +24,7 @@ func TestHandleChangePassword(t *testing.T) {
 		err := store.SaveUser(username, password, "user")
 		require.NoError(t, err)
 
-		return NewServer(store, testKey), username
+		return NewServer(store, testVersion, testKey), username
 	}
 
 	t.Run("should change password successfully", func(t *testing.T) {

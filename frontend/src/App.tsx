@@ -154,6 +154,15 @@ function App() {
     }
   }
 
+  const [version, setVersion] = useState<string>('')
+
+  useEffect(() => {
+    fetch('/version')
+      .then((res) => (res.ok ? res.json() : { version: '' }))
+      .then((data) => setVersion(data.version))
+      .catch((err) => console.error('Failed to fetch version:', err))
+  }, [])
+
   if (!token) {
     return (
       <div className="app-container">
@@ -162,6 +171,11 @@ function App() {
           <p className="subtitle">Secure Counter Access</p>
         </header>
         <Login onLogin={handleLogin} />
+        {version && (
+          <footer style={{ marginTop: '2rem', fontSize: '0.8rem', color: 'gray', textAlign: 'center' }}>
+            Build {version}
+          </footer>
+        )}
       </div>
     )
   }
@@ -255,6 +269,7 @@ function App() {
               View on GitHub
             </a>
           </p>
+          {version && <p style={{ fontSize: '0.8rem', marginTop: '0.5rem', color: 'gray', textAlign: 'center' }}>Build {version}</p>}
         </footer>
       </div>
     </div>
